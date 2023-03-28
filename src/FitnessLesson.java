@@ -2,6 +2,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class FitnessLesson {
     enum FitnessType {
@@ -81,6 +82,21 @@ public class FitnessLesson {
 
     public void setDatetime(LocalDateTime datetime) {
         this.datetime = datetime;
+    }
+
+    public String generateReport() {
+        List<Booking> attendedBookings = bookingList.stream().filter(new Predicate<Booking>() {
+            @Override
+            public boolean test(Booking booking) {
+                return booking.getBookingStatus() == Booking.BookingStatus.Attended;
+            }
+        }).toList();
+        int sum = 0;
+        for (Booking booking : attendedBookings) {
+            sum += booking.getRating();
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(EEE) HH:mm");
+        return String.format("%s %s, No. of customers: %d, Average rating: %.1f", datetime.format(formatter), fitnessType.name(), attendedBookings.size(), attendedBookings.size() == 0 ? 0 : sum * 1f / attendedBookings.size());
     }
 
     @Override

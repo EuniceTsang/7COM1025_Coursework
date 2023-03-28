@@ -100,6 +100,16 @@ public class Database {
         booking.changeFitnessLesson(lesson);
     }
 
+    //filter fitness lessons by month
+    public List<FitnessLesson> getFitnessLessons(int month) {
+        return fitnessLessons.stream().filter(new Predicate<FitnessLesson>() {
+            @Override
+            public boolean test(FitnessLesson fitnessLesson) {
+                return fitnessLesson.getDatetime().getMonthValue() == month;
+            }
+        }).toList();
+    }
+
     //filter fitness lessons by weekday
     public List<FitnessLesson> getFitnessLessons(DayOfWeek weekday) {
         return fitnessLessons.stream().filter(new Predicate<FitnessLesson>() {

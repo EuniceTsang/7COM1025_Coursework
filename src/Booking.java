@@ -38,6 +38,10 @@ public class Booking {
         return bookingStatus;
     }
 
+    public Integer getRating() {
+        return rating;
+    }
+
     public void attend(int rating, String review) {
         bookingStatus = BookingStatus.Attended;
         this.rating = rating;
@@ -52,7 +56,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(EEE) HH:mm");
         return String.format("%s %s", fitnessLesson.getFitnessType().name(), fitnessLesson.getDatetime().format(formatter));
     }
 }
