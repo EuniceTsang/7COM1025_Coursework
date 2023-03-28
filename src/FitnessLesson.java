@@ -63,6 +63,10 @@ public class FitnessLesson {
         }
     }
 
+    public void removeBooking(Booking booking) {
+        bookingList.remove(booking);
+    }
+
     public FitnessType getFitnessType() {
         return fitnessType;
     }
@@ -81,7 +85,7 @@ public class FitnessLesson {
 
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(EEE) HH:mm");
         return String.format("%s %s £%.2f", datetime.format(formatter), fitnessType.name(), price);
     }
 }

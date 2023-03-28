@@ -3,13 +3,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public class Database {
-    private HashMap<String, Booking> bookingHashMap = new HashMap<>();
+    private List<Booking> bookingList = new ArrayList<>();
     private List<FitnessLesson> fitnessLessons = new ArrayList<>();
     private List<Customer> customers = new ArrayList<>();
     private Customer currentCustomer;
@@ -21,8 +19,8 @@ public class Database {
         while (dateTime.getDayOfWeek() != DayOfWeek.SATURDAY) {
             dateTime = dateTime.plusDays(1);
         }
-        //add two lessons for each fitness type for 8 weekend days
-        for (int i = 0; i < 8; i++) {
+        //add two lessons for each fitness type for 8 weekends
+        for (int i = 0; i < 16; i++) {
             for (FitnessLesson.FitnessType fitnessType : FitnessLesson.FitnessType.values()) {
                 fitnessLessons.add(new FitnessLesson(fitnessType, dateTime.withHour(10)));
                 fitnessLessons.add(new FitnessLesson(fitnessType, dateTime.withHour(16)));
@@ -51,20 +49,15 @@ public class Database {
         currentCustomer = null;
 
         //attend some lesson
-        List<Booking> bookings = bookingHashMap.values().stream().toList();
-        bookings.get(1).attend(5, "Good");
-        bookings.get(3).attend(4, "I like it!");
-        bookings.get(5).attend(3, "Fair");
-        bookings.get(7).attend(2, "The lesson is too difficult for beginners");
-        bookings.get(9).attend(1, "The teacher is so rude!");
-        bookings.get(11).attend(5, "Excellent!!");
+        bookingList.get(1).attend(5, "Good");
+        bookingList.get(3).attend(4, "I like it!");
+        bookingList.get(5).attend(3, "Fair");
+        bookingList.get(7).attend(2, "The lesson is too difficult for beginners");
+        bookingList.get(9).attend(1, "The teacher is so rude!");
+        bookingList.get(11).attend(5, "Excellent!!");
     }
 
-    public void userLogout() {
-        currentCustomer = null;
-    }
-
-    //for login function
+    //for login/logout
     public void userLogin(String username) {
         for (Customer customer : customers) {
             if (customer.getUsername().equals(username)) {
@@ -77,7 +70,12 @@ public class Database {
         customers.add(newCustomer);
         currentCustomer = newCustomer;
     }
+    public void userLogout() {
+        System.out.printf("Logout success, bye %s\n", currentCustomer.getUsername());
+        currentCustomer = null;
+    }
 
+    //for manage booking
     public Booking createBooking(FitnessLesson lesson) {
         if (lesson.checkStudentExist(currentCustomer)) {
             System.out.println("You already joined this class.");
@@ -87,28 +85,46 @@ public class Database {
             System.out.println("The class capacity is full.");
             return null;
         }
-        String bookingNumber = UUID.randomUUID().toString();
-        Booking booking = new Booking(bookingNumber, currentCustomer, lesson);
+        Booking booking = new Booking(currentCustomer, lesson);
         currentCustomer.addBooking(booking);
         lesson.addBooking(booking);
-        bookingHashMap.put(bookingNumber, booking);
+        bookingList.add(booking);
         return booking;
     }
+    public void cancelBooking(Booking booking) {
+        booking.cancel();
+        bookingList.remove(booking);
+    }
 
-    public List<FitnessLesson> getFitnessLessons(LocalDateTime date) {
+    public void changeBooking(Booking booking, FitnessLesson lesson) {
+        booking.changeFitnessLesson(lesson);
+    }
+
+    //filter fitness lessons by weekday
+    public List<FitnessLesson> getFitnessLessons(DayOfWeek weekday) {
         return fitnessLessons.stream().filter(new Predicate<FitnessLesson>() {
             @Override
             public boolean test(FitnessLesson fitnessLesson) {
-                return fitnessLesson.getDatetime().truncatedTo(ChronoUnit.DAYS).isEqual(date);
+                return fitnessLesson.getDatetime().getDayOfWeek() == weekday;
             }
         }).toList();
     }
 
+    //filter fitness lessons by fitness type
     public List<FitnessLesson> getFitnessLessons(FitnessLesson.FitnessType fitnessType) {
         return fitnessLessons.stream().filter(new Predicate<FitnessLesson>() {
             @Override
             public boolean test(FitnessLesson fitnessLesson) {
                 return fitnessLesson.getFitnessType() == fitnessType;
+            }
+        }).toList();
+    }
+
+    public List<Booking> getBookingList(){
+        return bookingList.stream().filter(new Predicate<Booking>() {
+            @Override
+            public boolean test(Booking booking) {
+                return booking.getCustomer() == currentCustomer && booking.getBookingStatus() == Booking.BookingStatus.Booked;
             }
         }).toList();
     }

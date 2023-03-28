@@ -18,7 +18,11 @@ public class Customer {
         this.username = username;
     }
 
-    public void addBooking(Booking booking){
+    public void addBooking(Booking booking) {
         bookingList.add(booking);
+    }
+
+    public void removeBooking(Booking booking) {
+        bookingList.remove(booking);
     }
 }

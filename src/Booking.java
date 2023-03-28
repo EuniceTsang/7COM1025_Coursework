@@ -6,17 +6,13 @@ public class Booking {
         Booked, Cancelled, Attended
     }
 
-    ;
-
     private Customer customer;
     private FitnessLesson fitnessLesson;
-    private String bookingNumber;
     private BookingStatus bookingStatus;
     private Integer rating;
     private String review;
 
-    public Booking(String bookingNumber, Customer customer, FitnessLesson fitnessLesson) {
-        this.bookingNumber = bookingNumber;
+    public Booking(Customer customer, FitnessLesson fitnessLesson) {
         this.customer = customer;
         this.fitnessLesson = fitnessLesson;
         bookingStatus = BookingStatus.Booked;
@@ -26,15 +22,37 @@ public class Booking {
         return customer;
     }
 
+    public FitnessLesson getFitnessLesson() {
+        return fitnessLesson;
+    }
+
+    public void changeFitnessLesson(FitnessLesson newFitnessLesson) {
+        if (this.getFitnessLesson() != null) {
+            this.getFitnessLesson().removeBooking(this);
+        }
+        this.fitnessLesson = newFitnessLesson;
+        this.fitnessLesson.addBooking(this);
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
     public void attend(int rating, String review) {
         bookingStatus = BookingStatus.Attended;
         this.rating = rating;
         this.review = review;
     }
 
+    public void cancel() {
+        bookingStatus = BookingStatus.Cancelled;
+        fitnessLesson.removeBooking(this);
+        customer.removeBooking(this);
+    }
+
     @Override
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return String.format("Booking number: %s, %s %s", bookingNumber, fitnessLesson.getFitnessType().name(), fitnessLesson.getDatetime().format(formatter));
+        return String.format("%s %s", fitnessLesson.getFitnessType().name(), fitnessLesson.getDatetime().format(formatter));
     }
 }
