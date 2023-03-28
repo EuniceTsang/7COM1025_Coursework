@@ -1,16 +1,7 @@
-import java.text.DateFormat;
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
-import java.time.temporal.ChronoField;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class WFCBookingSystem {
     static Database database;
@@ -109,7 +100,7 @@ public class WFCBookingSystem {
         List<Booking> bookingList = database.getBookingList();
         if (bookingList.size() == 0) {
             System.out.println("Currently you have no any booking");
-            return;
+            showMainMenu();
         }
         System.out.println("Here is all your booking");
         for (int i = 0; i < bookingList.size(); i++) {
@@ -342,7 +333,7 @@ public class WFCBookingSystem {
         List<Booking> bookingList = database.getBookingList();
         if (bookingList.size() == 0) {
             System.out.println("Currently you have no any booking");
-            return;
+            showMainMenu();
         }
         System.out.println("Here is all your booking");
         for (int i = 0; i < bookingList.size(); i++) {
@@ -434,7 +425,41 @@ public class WFCBookingSystem {
     }
 
     public static void monthlyChampionReport() {
+        System.out.println("===============================================================");
+        System.out.println("Please input the month that you would like to view the report, or type 'BACK' to back to main menu");
+        boolean error;
+        do {
+            error = false;
+            scanner = new Scanner(System.in);
+            String input = scanner.next();
+            if (input.equalsIgnoreCase("BACK")) {
+                showMainMenu();
+            } else {
+                try {
+                    int inputInt = Integer.parseInt(input);
+                    if (inputInt < 1 || inputInt > 12) {
+                        System.out.println("Please input a valid month (1-12)");
+                        error = true;
+                        continue;
+                    }
+                    Map<FitnessLesson.FitnessType, Double> fitnessTypeIncomeMap = database.getFitnessTypeIncomeMap(inputInt);
+                    List<Map.Entry<FitnessLesson.FitnessType, Double>> sortedMapEntry = new ArrayList<>(fitnessTypeIncomeMap.entrySet());
+                    sortedMapEntry.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+                    String monthStr = Month.of(inputInt).getDisplayName(TextStyle.FULL, Locale.getDefault());
 
+                    System.out.printf("There is the monthly champion fitness type report of %s:\n", monthStr);
+                    int rank = 1;
+                    for (Map.Entry<FitnessLesson.FitnessType, Double> entry : sortedMapEntry) {
+                        System.out.printf("%d. %s, Total income: £%.2f\n", rank, entry.getKey().name(), entry.getValue());
+                        rank++;
+                    }
+                    showMainMenu();
+                } catch (NumberFormatException e) {
+                    System.out.println("Please input a number, or type 'BACK' to back to query");
+                    error = true;
+                }
+            }
+        } while (error);
     }
 
     public static void logout() {

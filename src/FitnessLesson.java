@@ -49,6 +49,10 @@ public class FitnessLesson {
         return bookingList;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
     public boolean checkStudentExist(Customer customer) {
         for (Booking booking : bookingList) {
             if (booking.getCustomer() == customer) {

@@ -2,8 +2,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class Database {
@@ -70,6 +69,7 @@ public class Database {
         customers.add(newCustomer);
         currentCustomer = newCustomer;
     }
+
     public void userLogout() {
         System.out.printf("Logout success, bye %s\n", currentCustomer.getUsername());
         currentCustomer = null;
@@ -91,6 +91,7 @@ public class Database {
         bookingList.add(booking);
         return booking;
     }
+
     public void cancelBooking(Booking booking) {
         booking.cancel();
         bookingList.remove(booking);
@@ -130,12 +131,32 @@ public class Database {
         }).toList();
     }
 
-    public List<Booking> getBookingList(){
+    public List<Booking> getBookingList() {
         return bookingList.stream().filter(new Predicate<Booking>() {
             @Override
             public boolean test(Booking booking) {
                 return booking.getCustomer() == currentCustomer && booking.getBookingStatus() == Booking.BookingStatus.Booked;
             }
         }).toList();
+    }
+
+    public Map<FitnessLesson.FitnessType, Double> getFitnessTypeIncomeMap(int month) {
+        Map<FitnessLesson.FitnessType, Double> fitnessTypeIncomeMap = new HashMap<>();
+        for (FitnessLesson.FitnessType type : FitnessLesson.FitnessType.values()) {
+            fitnessTypeIncomeMap.put(type, 0d);
+        }
+        for (Booking booking : bookingList) {
+            FitnessLesson lesson = booking.getFitnessLesson();
+            if (booking.getBookingStatus() == Booking.BookingStatus.Cancelled) {
+                continue;
+            }
+            if (lesson.getDatetime().getMonthValue() != month) {
+                continue;
+            }
+            double income = fitnessTypeIncomeMap.get(lesson.getFitnessType());
+            income += lesson.getPrice();
+            fitnessTypeIncomeMap.put(lesson.getFitnessType(), income);
+        }
+        return fitnessTypeIncomeMap;
     }
 }
