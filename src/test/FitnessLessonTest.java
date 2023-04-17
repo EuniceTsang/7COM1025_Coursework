@@ -1,7 +1,6 @@
 package test;
 
 import WFCBookingSystem.*;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

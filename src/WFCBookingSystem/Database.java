@@ -96,11 +96,11 @@ public class Database {
     //for manage booking
     public Booking createBooking(FitnessLesson lesson) {
         if (lesson.checkStudentExist(currentCustomer)) {
-            System.out.println("You already joined this class.");
+            System.out.println("You already joined this class");
             return null;
         }
         if (lesson.getBookingList().size() >= 5) {
-            System.out.println("The class capacity is full.");
+            System.out.println("The class capacity is full");
             return null;
         }
         Booking booking = new Booking(currentCustomer, lesson);
@@ -115,8 +115,8 @@ public class Database {
         bookingList.remove(booking);
     }
 
-    public void changeBooking(Booking booking, FitnessLesson lesson) {
-        booking.changeFitnessLesson(lesson);
+    public boolean changeBooking(Booking booking, FitnessLesson lesson) {
+        return booking.changeFitnessLesson(lesson);
     }
 
     //filter fitness lessons by month

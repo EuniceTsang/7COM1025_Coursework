@@ -27,12 +27,22 @@ public class Booking {
         return fitnessLesson;
     }
 
-    public void changeFitnessLesson(FitnessLesson newFitnessLesson) {
-        if (this.getFitnessLesson() != null) {
-            this.getFitnessLesson().removeBooking(this);
+    public boolean changeFitnessLesson(FitnessLesson newFitnessLesson) {
+        if (this.bookingStatus != BookingStatus.Booked) {
+            return false;
         }
+        if (newFitnessLesson.getBookingList().size() >= 5) {
+            System.out.println("The class capacity is full");
+            return false;
+        }
+        if (newFitnessLesson.checkStudentExist(customer)) {
+            System.out.println("You already joined this class");
+            return false;
+        }
+        this.getFitnessLesson().removeBooking(this);
         this.fitnessLesson = newFitnessLesson;
         this.fitnessLesson.addBooking(this);
+        return true;
     }
 
     public BookingStatus getBookingStatus() {

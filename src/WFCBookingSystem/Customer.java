@@ -21,10 +21,18 @@ public class Customer {
     }
 
     public void addBooking(Booking booking) {
-        bookingList.add(booking);
+        if (!bookingList.contains(booking) &&
+                booking.getBookingStatus() == Booking.BookingStatus.Booked &&
+                booking.getCustomer() == this) {
+            bookingList.add(booking);
+        }
     }
 
     public void removeBooking(Booking booking) {
         bookingList.remove(booking);
+    }
+
+    public List<Booking> getBookingList() {
+        return bookingList;
     }
 }

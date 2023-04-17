@@ -2,7 +2,6 @@ package test;
 
 import WFCBookingSystem.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,19 +9,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
 class DatabaseTest {
 
     Database database;
     List<FitnessLesson> lessonList;
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    private ByteArrayOutputStream testOut = new ByteArrayOutputStream();
 
     @BeforeEach
-    public void before() {
+    public void setUp() {
         database = new Database();
         lessonList = database.getFitnessLessons();
-        System.setOut(new PrintStream(outputStreamCaptor));
+        System.setOut(new PrintStream(testOut));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.setOut(System.out);
     }
 
     @Test
@@ -30,9 +34,9 @@ class DatabaseTest {
         database.userLogin("test");
         FitnessLesson lesson = lessonList.get(3);   //a lesson which have no student
         Booking booking = database.createBooking(lesson);
-        Assertions.assertEquals(booking.getBookingStatus(), Booking.BookingStatus.Booked);
-        Assertions.assertEquals(booking.getFitnessLesson(), lesson);
-        Assertions.assertEquals(booking.getCustomer(), database.getCurrentCustomer());
+        assertEquals(Booking.BookingStatus.Booked, booking.getBookingStatus());
+        assertEquals(lesson, booking.getFitnessLesson());
+        assertEquals(database.getCurrentCustomer(), booking.getCustomer());
     }
 
     @Test
@@ -40,9 +44,9 @@ class DatabaseTest {
         database.userLogin("test");
         FitnessLesson lesson = lessonList.get(1); //a lesson which have 4 students
         Booking booking = database.createBooking(lesson);
-        Assertions.assertEquals(booking.getBookingStatus(), Booking.BookingStatus.Booked);
-        Assertions.assertEquals(booking.getFitnessLesson(), lesson);
-        Assertions.assertEquals(booking.getCustomer(), database.getCurrentCustomer());
+        assertEquals(Booking.BookingStatus.Booked, booking.getBookingStatus());
+        assertEquals(lesson, booking.getFitnessLesson());
+        assertEquals(database.getCurrentCustomer(), booking.getCustomer());
     }
 
     @Test
@@ -51,7 +55,7 @@ class DatabaseTest {
         FitnessLesson lesson = lessonList.get(3);
         database.createBooking(lesson);
         database.createBooking(lesson);
-        assertEquals("You already joined this class.", outputStreamCaptor.toString().trim());
+        assertEquals("You already joined this class.", testOut.toString().trim());
     }
 
     @Test
@@ -59,7 +63,7 @@ class DatabaseTest {
         database.userLogin("test");
         FitnessLesson lesson = lessonList.get(0); //a lesson which already have 5 students
         database.createBooking(lesson);
-        assertEquals("The class capacity is full.", outputStreamCaptor.toString().trim());
+        assertEquals("The class capacity is full.", testOut.toString().trim());
     }
 
     @Test
@@ -68,11 +72,6 @@ class DatabaseTest {
         FitnessLesson lesson = lessonList.get(1); //a lesson which have 4 students
         database.createBooking(lesson);
         database.createBooking(lesson);
-        assertEquals("You already joined this class.", outputStreamCaptor.toString().trim());
-    }
-
-    @AfterEach
-    public void tearDown() {
-        System.setOut(System.out);
+        assertEquals("You already joined this class.", testOut.toString().trim());
     }
 }

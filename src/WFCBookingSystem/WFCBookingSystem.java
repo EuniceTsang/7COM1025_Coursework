@@ -167,10 +167,16 @@ public class WFCBookingSystem {
             String input = scanner.next().toUpperCase();
             switch (input) {
                 case "YES":
-                    database.changeBooking(booking, lesson);
-                    System.out.printf("Success\nUpdated booking: {%s}\n", booking.toString());
-                    showMainMenu();
-                    return;
+                    if(database.changeBooking(booking, lesson)){
+                        System.out.printf("Success\nUpdated booking: {%s}\n", booking.toString());
+                        showMainMenu();
+                        return;
+                    }
+                    else {
+                        System.out.println("Please select another lesson");
+                        error = true;
+                    }
+                    break;
                 case "NO":
                     showMainMenu();
                     return;
@@ -312,7 +318,7 @@ public class WFCBookingSystem {
         boolean error;
         do {
             error = false;
-            scanner = new Scanner(System.in);
+//            scanner = new Scanner(System.in);
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 return null;
