@@ -318,7 +318,7 @@ public class WFCBookingSystem {
         boolean error;
         do {
             error = false;
-//            scanner = new Scanner(System.in);
+            scanner = new Scanner(System.in);
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 return null;
@@ -484,5 +484,9 @@ public class WFCBookingSystem {
 
     public static void logout() {
         database.userLogout();
+    }
+
+    public static void updateScanner(){
+        scanner = new Scanner(System.in);
     }
 }

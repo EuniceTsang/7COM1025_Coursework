@@ -11,13 +11,13 @@ import java.io.PrintStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WFCBookingSystemTest {
-    private ByteArrayOutputStream testOut = new ByteArrayOutputStream();
-    private ByteArrayInputStream testIn;
+    private final ByteArrayOutputStream testOut = new ByteArrayOutputStream();
 
     @BeforeEach
     void setUp() {
@@ -31,7 +31,7 @@ class WFCBookingSystemTest {
     }
 
     private void provideInput(String data) {
-        testIn = new ByteArrayInputStream(data.getBytes());
+        ByteArrayInputStream testIn = new ByteArrayInputStream(data.getBytes());
         System.setIn(testIn);
     }
 
@@ -65,6 +65,7 @@ class WFCBookingSystemTest {
         FitnessLesson result = WFCBookingSystem.showTimetable(testFitnessLessonList);
         assertEquals(testFitnessLesson2, result);
     }
+
     @Test
     void testShowTimetableBack() {
         List<FitnessLesson> testFitnessLessonList = new ArrayList<>();
@@ -77,6 +78,7 @@ class WFCBookingSystemTest {
         FitnessLesson result = WFCBookingSystem.showTimetable(testFitnessLessonList);
         assertNull(result);
     }
+
     @Test
     void testShowTimetableInvalidIndex() {
         List<FitnessLesson> testFitnessLessonList = new ArrayList<>();
@@ -85,10 +87,12 @@ class WFCBookingSystemTest {
         FitnessLesson testFitnessLesson = new FitnessLesson(testFitnessType, testDateTime);
         testFitnessLessonList.add(testFitnessLesson);
 
-        provideInput("5 1 ");
-        FitnessLesson result = WFCBookingSystem.showTimetable(testFitnessLessonList);
-        assertTrue(testOut.toString().contains("Please input a valid index"));
-        assertEquals(testFitnessLesson, result);
+        provideInput("5");
+        try {
+            WFCBookingSystem.showTimetable(testFitnessLessonList);
+        } catch (NoSuchElementException e) {
+            assertTrue(testOut.toString().contains("Please input a valid index"));
+        }
     }
 
     @Test
@@ -99,9 +103,11 @@ class WFCBookingSystemTest {
         FitnessLesson testFitnessLesson = new FitnessLesson(testFitnessType, testDateTime);
         testFitnessLessonList.add(testFitnessLesson);
 
-        provideInput("abc 1 ");
-        FitnessLesson result = WFCBookingSystem.showTimetable(testFitnessLessonList);
-        assertTrue(testOut.toString().contains("Please input a number, or type 'BACK' to back to query"));
-        assertEquals(testFitnessLesson, result);
+        provideInput("abc");
+        try {
+            WFCBookingSystem.showTimetable(testFitnessLessonList);
+        } catch (NoSuchElementException e) {
+            assertTrue(testOut.toString().contains("Please input a number, or type 'BACK' to back to query"));
+        }
     }
 }

@@ -55,7 +55,7 @@ class DatabaseTest {
         FitnessLesson lesson = lessonList.get(3);
         database.createBooking(lesson);
         database.createBooking(lesson);
-        assertEquals("You already joined this class.", testOut.toString().trim());
+        assertEquals("You already joined this class", testOut.toString().trim());
     }
 
     @Test
@@ -63,7 +63,7 @@ class DatabaseTest {
         database.userLogin("test");
         FitnessLesson lesson = lessonList.get(0); //a lesson which already have 5 students
         database.createBooking(lesson);
-        assertEquals("The class capacity is full.", testOut.toString().trim());
+        assertEquals("The class capacity is full", testOut.toString().trim());
     }
 
     @Test
@@ -72,6 +72,6 @@ class DatabaseTest {
         FitnessLesson lesson = lessonList.get(1); //a lesson which have 4 students
         database.createBooking(lesson);
         database.createBooking(lesson);
-        assertEquals("You already joined this class.", testOut.toString().trim());
+        assertEquals("You already joined this class", testOut.toString().trim());
     }
 }
