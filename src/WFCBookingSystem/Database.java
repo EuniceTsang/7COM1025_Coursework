@@ -1,3 +1,5 @@
+package WFCBookingSystem;
+
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -31,29 +33,41 @@ public class Database {
             }
         }
         //add customer and bookings
-        customers.add(new Customer("Eren"));
-        customers.add(new Customer("Mikasa"));
-        customers.add(new Customer("Armin"));
-        customers.add(new Customer("Annie"));
-        customers.add(new Customer("Levi"));
+        Customer customer1 = new Customer("Eren");
+        customers.add(customer1);
+        currentCustomer = customer1;
+        createBooking(fitnessLessons.get(0));
+        createBooking(fitnessLessons.get(1));
+        createBooking(fitnessLessons.get(2)).attend(5, "Good");
 
-        for (int i = 0; i < customers.size(); i++) {
-            currentCustomer = customers.get(i);
-            int j = i;
-            while (j < fitnessLessons.size()) {
-                createBooking(fitnessLessons.get(j));
-                j += 5;
-            }
-        }
+        Customer customer2 = new Customer("Mikasa");
+        customers.add(customer2);
+        currentCustomer = customer2;
+        createBooking(fitnessLessons.get(0));
+        createBooking(fitnessLessons.get(1));
+        createBooking(fitnessLessons.get(2)).attend(4, "I like it!");
+
+        Customer customer3 = new Customer("Armin");
+        customers.add(customer3);
+        currentCustomer = customer3;
+        createBooking(fitnessLessons.get(0));
+        createBooking(fitnessLessons.get(1));
+        createBooking(fitnessLessons.get(2)).attend(3, "Fair");
+
+        Customer customer4 = new Customer("Annie");
+        customers.add(customer4);
+        currentCustomer = customer4;
+        createBooking(fitnessLessons.get(0));
+        createBooking(fitnessLessons.get(1));
+        createBooking(fitnessLessons.get(2)).attend(2, "The lesson is too difficult for beginners");
+
+        Customer customer5 = new Customer("Levi");
+        customers.add(customer5);
+        currentCustomer = customer5;
+        createBooking(fitnessLessons.get(0));
+        createBooking(fitnessLessons.get(2)).attend(1, "The teacher is so rude!");
+
         currentCustomer = null;
-
-        //attend some lesson
-        bookingList.get(1).attend(5, "Good");
-        bookingList.get(3).attend(4, "I like it!");
-        bookingList.get(5).attend(3, "Fair");
-        bookingList.get(7).attend(2, "The lesson is too difficult for beginners");
-        bookingList.get(9).attend(1, "The teacher is so rude!");
-        bookingList.get(11).attend(5, "Excellent!!");
     }
 
     //for login/logout
@@ -73,6 +87,10 @@ public class Database {
     public void userLogout() {
         System.out.printf("Logout success, bye %s\n", currentCustomer.getUsername());
         currentCustomer = null;
+    }
+
+    public Customer getCurrentCustomer() {
+        return currentCustomer;
     }
 
     //for manage booking
@@ -129,6 +147,10 @@ public class Database {
                 return fitnessLesson.getFitnessType() == fitnessType;
             }
         }).toList();
+    }
+
+    public List<FitnessLesson> getFitnessLessons() {
+        return fitnessLessons;
     }
 
     public List<Booking> getBookingList() {

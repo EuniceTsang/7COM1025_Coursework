@@ -1,3 +1,5 @@
+package WFCBookingSystem;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -5,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FitnessLesson {
-    enum FitnessType {
+    public enum FitnessType {
         Spin, Yoga, Bodysculpt, Zumba, Aquacise, BoxFit
     }
 

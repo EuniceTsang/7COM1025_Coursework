@@ -1,11 +1,13 @@
+package WFCBookingSystem;
+
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 
 public class WFCBookingSystem {
-    static Database database;
-    static Scanner scanner = new Scanner(System.in);
+    static private Database database;
+    static private Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         database = new Database();
@@ -26,6 +28,7 @@ public class WFCBookingSystem {
             database.userLogin(input);
             System.out.printf("Welcome, %s\n", input);
             showMainMenu();
+            return;
         }
     }
 
@@ -82,6 +85,7 @@ public class WFCBookingSystem {
         FitnessLesson lesson = queryFitnessLesson();
         if (lesson == null) {
             showMainMenu();
+            return;
         } else {
             Booking booking = database.createBooking(lesson);
             if (booking == null) {
@@ -90,6 +94,7 @@ public class WFCBookingSystem {
             } else {
                 System.out.printf("Success.\nNew booking: {%s}\n", booking.toString());
                 showMainMenu();
+                return;
             }
         }
     }
@@ -101,6 +106,7 @@ public class WFCBookingSystem {
         if (bookingList.size() == 0) {
             System.out.println("Currently you have no any booking");
             showMainMenu();
+            return;
         }
         System.out.println("Here is all your booking");
         for (int i = 0; i < bookingList.size(); i++) {
@@ -114,6 +120,7 @@ public class WFCBookingSystem {
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 showMainMenu();
+                return;
             } else {
                 try {
                     int inputInt = Integer.parseInt(input);
@@ -163,10 +170,10 @@ public class WFCBookingSystem {
                     database.changeBooking(booking, lesson);
                     System.out.printf("Success\nUpdated booking: {%s}\n", booking.toString());
                     showMainMenu();
-                    break;
+                    return;
                 case "NO":
                     showMainMenu();
-                    break;
+                    return;
                 default:
                     error = true;
                     System.out.println("Please input YES or NO");
@@ -187,10 +194,10 @@ public class WFCBookingSystem {
                     database.cancelBooking(booking);
                     System.out.printf("Success\nCancelled booking: {%s}\n", booking.toString());
                     showMainMenu();
-                    break;
+                    return;
                 case "NO":
                     showMainMenu();
-                    break;
+                    return;
                 default:
                     error = true;
                     System.out.println("Please input YES or NO");
@@ -334,6 +341,7 @@ public class WFCBookingSystem {
         if (bookingList.size() == 0) {
             System.out.println("Currently you have no any booking");
             showMainMenu();
+            return;
         }
         System.out.println("Here is all your booking");
         for (int i = 0; i < bookingList.size(); i++) {
@@ -347,6 +355,7 @@ public class WFCBookingSystem {
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 showMainMenu();
+                return;
             } else {
                 try {
                     int inputInt = Integer.parseInt(input);
@@ -374,6 +383,7 @@ public class WFCBookingSystem {
                             booking.attend(rate, comment);
                             System.out.println("Thanks for your feedback!");
                             showMainMenu();
+                            return;
                         } catch (InputMismatchException e) {
                             System.out.println("Please input a number");
                             rateError = true;
@@ -397,6 +407,7 @@ public class WFCBookingSystem {
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 showMainMenu();
+                return;
             } else {
                 try {
                     int inputInt = Integer.parseInt(input);
@@ -416,6 +427,7 @@ public class WFCBookingSystem {
                         }
                     }
                     showMainMenu();
+                    return;
                 } catch (NumberFormatException e) {
                     System.out.println("Please input a number, or type 'BACK' to back to query");
                     error = true;
@@ -434,6 +446,7 @@ public class WFCBookingSystem {
             String input = scanner.next();
             if (input.equalsIgnoreCase("BACK")) {
                 showMainMenu();
+                return;
             } else {
                 try {
                     int inputInt = Integer.parseInt(input);
@@ -454,6 +467,7 @@ public class WFCBookingSystem {
                         rank++;
                     }
                     showMainMenu();
+                    return;
                 } catch (NumberFormatException e) {
                     System.out.println("Please input a number, or type 'BACK' to back to query");
                     error = true;

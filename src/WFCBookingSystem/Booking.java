@@ -1,8 +1,9 @@
+package WFCBookingSystem;
+
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 
 public class Booking {
-    enum BookingStatus {
+    public enum BookingStatus {
         Booked, Cancelled, Attended
     }
 
