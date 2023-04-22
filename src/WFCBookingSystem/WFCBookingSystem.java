@@ -34,7 +34,7 @@ public class WFCBookingSystem {
 
     public static void showMainMenu() {
         System.out.println("===============================================================");
-        System.out.println("Please input the index of action you would like to do:");
+        System.out.println("Please input the index of an action you would like to do:");
         System.out.println("1. Book a group fitness lesson");
         System.out.println("2. Change/Cancel a booking ");
         System.out.println("3. Attend a lesson");
@@ -86,17 +86,17 @@ public class WFCBookingSystem {
         if (lesson == null) {
             showMainMenu();
             return;
-        } else {
-            Booking booking = database.createBooking(lesson);
-            if (booking == null) {
-                System.out.println("Please select another lesson");
-                bookFitnessLesson();
-            } else {
-                System.out.printf("Success.\nNew booking: {%s}\n", booking.toString());
-                showMainMenu();
-                return;
-            }
         }
+        Booking booking = database.createBooking(lesson);
+        if (booking == null) {
+            System.out.println("Please select another lesson");
+            bookFitnessLesson();
+        } else {
+            System.out.printf("Success.\nNew booking: {%s}\n", booking.toString());
+            showMainMenu();
+            return;
+        }
+
     }
 
     //update fitness lesson
@@ -159,6 +159,10 @@ public class WFCBookingSystem {
     public static void changeBooking(Booking booking) {
         System.out.println("Please search a lesson you wanna to replace");
         FitnessLesson lesson = queryFitnessLesson();
+        if (lesson == null) {
+            showMainMenu();
+            return;
+        }
         System.out.printf("Are you sure you want to change your lesson? (YES/NO)\n {%s} -> {%s}\n", booking.getFitnessLesson().toString(), lesson.toString());
         boolean error = false;
         do {
@@ -167,16 +171,14 @@ public class WFCBookingSystem {
             String input = scanner.next().toUpperCase();
             switch (input) {
                 case "YES":
-                    if(database.changeBooking(booking, lesson)){
+                    if (database.changeBooking(booking, lesson)) {
                         System.out.printf("Success\nUpdated booking: {%s}\n", booking.toString());
                         showMainMenu();
-                        return;
-                    }
-                    else {
+                    } else {
                         System.out.println("Please select another lesson");
-                        error = true;
+                        changeBooking(booking);
                     }
-                    break;
+                    return;
                 case "NO":
                     showMainMenu();
                     return;
@@ -312,7 +314,7 @@ public class WFCBookingSystem {
 
     public static FitnessLesson showTimetable(List<FitnessLesson> lessonList) {
         for (int i = 0; i < lessonList.size(); i++) {
-            System.out.printf("%d. %s%n", i + 1, lessonList.get(i).toString());
+            System.out.printf("%d. %s%n", i + 1, lessonList.get(i).timetableDetails());
         }
         System.out.println("Please select a lesson, or type 'BACK' to back to query");
         boolean error;
@@ -486,7 +488,7 @@ public class WFCBookingSystem {
         database.userLogout();
     }
 
-    public static void updateScanner(){
+    public static void updateScanner() {
         scanner = new Scanner(System.in);
     }
 }

@@ -110,4 +110,9 @@ public class FitnessLesson {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(EEE) HH:mm");
         return String.format("%s %s £%.2f", datetime.format(formatter), fitnessType.name(), price);
     }
+
+    public String timetableDetails() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd(EEE) HH:mm");
+        return String.format("%s %s £%.2f capacity: %d/5", datetime.format(formatter), fitnessType.name(), price, bookingList.size());
+    }
 }

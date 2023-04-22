@@ -44,9 +44,10 @@ class BookingTest {
         customer.addBooking(booking);
 
         //Act
-        booking.changeFitnessLesson(newLesson);
+        boolean result = booking.changeFitnessLesson(newLesson);
 
         //Assert
+        assertTrue(result);
         assertEquals(customer, booking.getCustomer());
         assertEquals(Booking.BookingStatus.Booked, booking.getBookingStatus());
         assertEquals(newLesson, booking.getFitnessLesson());
@@ -68,9 +69,10 @@ class BookingTest {
         customer.addBooking(booking);
 
         //Act
-        booking.changeFitnessLesson(originalLesson);
+        boolean result = booking.changeFitnessLesson(originalLesson);
 
         //Assert
+        assertFalse(result);
         assertEquals(customer, booking.getCustomer());
         assertEquals(Booking.BookingStatus.Booked, booking.getBookingStatus());
         assertEquals(originalLesson, booking.getFitnessLesson());
@@ -102,9 +104,10 @@ class BookingTest {
         customer.addBooking(booking);
 
         //Act
-        booking.changeFitnessLesson(newLesson);
+        boolean result = booking.changeFitnessLesson(newLesson);
 
         //Assert
+        assertFalse(result);
         assertEquals(customer, booking.getCustomer());
         assertEquals(Booking.BookingStatus.Booked, booking.getBookingStatus());
         assertEquals(originalLesson, booking.getFitnessLesson());
@@ -131,9 +134,10 @@ class BookingTest {
         booking.attend(5, "Nice");  //create an attended booking
 
         //Act
-        booking.changeFitnessLesson(newLesson);
+        boolean result = booking.changeFitnessLesson(newLesson);
 
         //Assert
+        assertFalse(result);
         assertEquals(customer, booking.getCustomer());
         assertEquals(Booking.BookingStatus.Attended, booking.getBookingStatus());
         assertEquals(originalLesson, booking.getFitnessLesson());
@@ -158,9 +162,10 @@ class BookingTest {
         booking.cancel();   //create a cancelled booking
 
         //Act
-        booking.changeFitnessLesson(newLesson);
+        boolean result = booking.changeFitnessLesson(newLesson);
 
         //Assert
+        assertFalse(result);
         assertEquals(customer, booking.getCustomer());
         assertEquals(Booking.BookingStatus.Cancelled, booking.getBookingStatus());
         assertFalse(originalLesson.getBookingList().contains(booking));
